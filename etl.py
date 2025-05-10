@@ -1,3 +1,5 @@
+from apscheduler.schedulers.blocking import BlockingScheduler
+from datetime import datetime
 import pandas as pd
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
@@ -31,3 +33,9 @@ df.to_sql('users', engine, if_exists='replace', index=False)
 # Confirm insertion
 result = pd.read_sql('SELECT * FROM users', engine)
 print(result)
+
+# Scheduler
+scheduler = BlockingScheduler()
+scheduler.add_job(run_etl, 'cron', hour=9, minute=0)  # Runs daily at 9:00 AM
+
+scheduler.start()
